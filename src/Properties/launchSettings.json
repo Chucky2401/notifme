@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TestToast": {
+      "commandName": "Project",
+      "commandLineArgs": "-m \"Un message de type Reminder\""
+    }
+  }
+}
