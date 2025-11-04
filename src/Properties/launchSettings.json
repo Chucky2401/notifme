@@ -2,7 +2,7 @@
   "profiles": {
     "TestToast": {
       "commandName": "Project",
-      "commandLineArgs": "-m \"Un message de type Reminder\""
+      "commandLineArgs": "-p \"Test\" -m \"Un message de type Reminder\""
     }
   }
 }
