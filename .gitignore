@@ -1,11 +1,13 @@
+# VS working files/folders
 bin/
 dist/
 .distraw/
 obj/
 tmp/
-*.sln
 .vs
 src/.vs
 *.pext
+
+# Personal working files/folders
 scripts/
 notes/
