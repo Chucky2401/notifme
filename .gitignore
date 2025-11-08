@@ -20,4 +20,4 @@ src/01_NotifMe/ext/ntfy.exe
 # N/A
 
 # Bundle setup
-bundle/runtimes/*.exe
+src/04_BundleSetupNotifMe/runtimes/*.exe
