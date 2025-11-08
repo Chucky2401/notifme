@@ -59,10 +59,10 @@ internal class Program {
 
     static void ShowToastNotification(ProgramArguments opts) {
         Dictionary<MessageType, string> images = new() {
-            { MessageType.Error,   "img\\error.png" },
-            { MessageType.Info,    "img\\info.png" },
-            { MessageType.Warning, "img\\warn.png" },
-            { MessageType.Success, "img\\success.png" }
+            { MessageType.Error,   @"img\error.png" },
+            { MessageType.Info,    @"img\info.png" },
+            { MessageType.Warning, @"img\warn.png" },
+            { MessageType.Success, @"img\success.png" }
         };
 
         ToastContentBuilder toast = new();
