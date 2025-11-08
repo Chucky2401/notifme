@@ -1,71 +1,88 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using CommandLine;
-using CommandLine.Text;
+using System.CommandLine;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NotifMe;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows;
 using Windows.Foundation.Collections;
-using Windows.Media.Capture;
 
 internal class Program {
 
-    static void Main(string[] args) {
+    static int Main(string[] args) {
+        // Configuration du gestionnaire de notifications Toast
         ToastNotificationManagerCompat.OnActivated += toastArgs => {
-            //Get the activation args, if you need those.
-            ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
-            //Get user input if there's any and if you need those.
+            ToastArguments toastArguments = ToastArguments.Parse(toastArgs.Argument);
             ValueSet userInput = toastArgs.UserInput;
-            //if the app instance just started after clicking on a notification 
             if (ToastNotificationManagerCompat.WasCurrentProcessToastActivated()) {
                 ToastNotificationManagerCompat.History.Clear();
-                Application.Exit();
+                Environment.Exit(0);
             }
         };
 
-        Options options = new Options();
+        // Configuration et parsing des arguments de ligne de commande
+        var config = new CommandLineConfig();
+        var rootCommand = config.CreateRootCommand();
 
-        ParserResult<Options> parserResult = Parser.Default.ParseArguments<Options>(args);
-        parserResult
-            .WithParsed(opts => RunOptions(opts))
-            .WithNotParsed(errs => HandleParseError(parserResult, errs));
-    }
+        // Parse les arguments
+        ParseResult parseResult = rootCommand.Parse(args);
 
-    static void RunOptions(Options opts) {
-        Dictionary<string, string> image = new Dictionary<string, string>() {
-            { "error"   , "img\\error.png" },
-            { "info"    , "img\\info.png" },
-            { "question", "img\\question.png" },
-            { "success" , "img\\success.png" },
-            { "warn"    , "img\\warn.png" }
+        // Extraire les valeurs
+        var title = parseResult.GetValue(config.TitleOption);
+        var message = parseResult.GetValue(config.MessageOption);
+        var type = parseResult.GetValue(config.TypeOption);
+        var expiration = parseResult.GetValue(config.ExpirationOption);
+        var duration = parseResult.GetValue(config.DurationOption);
+        var sticky = parseResult.GetValue(config.StickyOption);
+
+        // Vérifier les erreurs
+        if (parseResult.Errors.Count > 0) {
+            foreach (var error in parseResult.Errors) {
+                Console.Error.WriteLine(error.Message);
+            }
+            return 1;
+        }
+
+        // Créer l'objet arguments
+        var arguments = new ProgramArguments {
+            Title = title ?? string.Empty,
+            Message = message ?? string.Empty,
+            Type = type,
+            Expiration = expiration,
+            Duration = duration,
+            Sticky = sticky
         };
 
-        string iconPath = opts.Type;
-        string title = opts.Prompt;
-        if (String.IsNullOrEmpty(title)) {
-            title = string.Empty;
+        // Afficher la notification
+        ShowToastNotification(arguments);
+
+        return 0;
+    }
+
+    static void ShowToastNotification(ProgramArguments opts) {
+        Dictionary<MessageType, string> images = new() {
+            { MessageType.Error,   "img\\error.png" },
+            { MessageType.Info,    "img\\info.png" },
+            { MessageType.Warning, "img\\warn.png" },
+            { MessageType.Success, "img\\success.png" }
+        };
+
+        ToastContentBuilder toast = new();
+
+        if (images.TryGetValue(opts.Type, out string? value)) {
+            string iconPath = Path.GetFullPath(value);
+            if (File.Exists(iconPath)) {
+                toast.AddAppLogoOverride(new Uri(iconPath));
+            }
         }
 
-        string message = opts.Message;
-
-        double expiration = 86400;
-        if (opts.Expiration > 0) {
-            expiration = opts.Expiration;
+        if (!string.IsNullOrEmpty(opts.Title)) {
+            toast.AddText(opts.Title);
         }
 
-        expiration = 0;
+        toast.AddText(opts.Message);
 
-        ToastContentBuilder toast = new ToastContentBuilder();
-
-        if (!String.IsNullOrEmpty(iconPath)) {
-            string icon = Path.GetFullPath(image[opts.Type]);
-            toast.AddAppLogoOverride(new Uri(icon));
+        if (opts.Duration) {
+            toast.SetToastDuration(ToastDuration.Long);
         }
-
-        toast.AddText(title);
-        toast.AddText(message);
 
         if (opts.Duration) {
             toast.SetToastDuration(ToastDuration.Long);
@@ -76,28 +93,10 @@ internal class Program {
             toast.AddButton(new ToastButton().SetContent("OK").SetDismissActivation());
         }
 
-        toast.Show(toast => {
-            toast.ExpirationTime = DateTime.Now.AddSeconds(expiration);
+        toast.Show(t => {
+            if (opts.Expiration > 0) {
+                t.ExpirationTime = DateTime.Now.AddSeconds(opts.Expiration);
+            }
         });
-    }
-
-    static void HandleParseError(ParserResult<Options> parserResult, IEnumerable<Error> errs) {
-        HelpText helpText = HelpText.AutoBuild(parserResult, h => {
-            h.AdditionalNewLineAfterOption = false;
-            h.AutoVersion = false;
-            h.Heading = "NotifMe v1.0.0";
-            h.Copyright = "Copyright © 2024 - The Black Wizard";
-            h.MaximumDisplayWidth = 160;
-            return HelpText.DefaultParsingErrorsHandler(parserResult, h);
-        }, e => e);
-
-        if (errs.Any(x => x is HelpRequestedError)) {
-            MessageBox.Show(helpText, "NotifMe Help", MessageBoxButtons.OK);
-        }
-
-
-        if (errs.Any(x => x is MissingRequiredOptionError)) {
-            MessageBox.Show(helpText, "NotifMe Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
     }
 }
