@@ -67,4 +67,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="assets\" />
+    <Folder Include="ext\" />
+  </ItemGroup>
+
 </Project>
