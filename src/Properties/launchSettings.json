@@ -1,8 +1,24 @@
 {
   "profiles": {
-    "TestToast": {
+    "Length Max - Sticky": {
       "commandName": "Project",
-      "commandLineArgs": "-p \"Test\" -m \"Un message de type Reminder\""
+      "commandLineArgs": "-p \"Le titre accepte 75 caractères max.\" -m \"Le message lui est limité à 150 caractères.\" -s"
+    },
+    "Warning": {
+      "commandName": "Project",
+      "commandLineArgs": "-p \"Le titre accepte 75 caractères max.\" -m \"Le message lui est limité à 150 caractères.\" -t \"Warning\""
+    },
+    "Error": {
+      "commandName": "Project",
+      "commandLineArgs": "-p \"Le titre accepte 75 caractères max.\" -m \"Le message lui est limité à 150 caractères.\" -t \"Error\""
+    },
+    "Success": {
+      "commandName": "Project",
+      "commandLineArgs": "-p \"Le titre accepte 75 caractères max.\" -m \"Le message lui est limité à 150 caractères.\" -t \"Success\""
+    },
+    "Info": {
+      "commandName": "Project",
+      "commandLineArgs": "-p \"Le titre accepte 75 caractères max.\" -m \"Le message lui est limité à 150 caractères.\""
     }
   }
 }
