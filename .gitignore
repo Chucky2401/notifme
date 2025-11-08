@@ -11,3 +11,13 @@ src/.vs
 # Personal working files/folders
 scripts/
 notes/
+
+# NotifMe
+src/assets/client.yml
+src/ext/ntfy.exe
+
+# Setup
+# N/A
+
+# Bundle setup
+bundle/runtimes/*.exe
