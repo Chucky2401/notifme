@@ -61,6 +61,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="assets\client.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ext\ntfy.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="img\app.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
