@@ -13,8 +13,8 @@ scripts/
 notes/
 
 # NotifMe
-src/assets/client.yml
-src/ext/ntfy.exe
+src/01_NotifMe/assets/client.yml
+src/01_NotifMe/ext/ntfy.exe
 
 # Setup
 # N/A
