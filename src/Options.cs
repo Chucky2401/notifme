@@ -1,28 +1,80 @@
-﻿using CommandLine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.CommandLine;
 
 namespace NotifMe {
-    public class Options {
-        [Option('p', "prompt", Required = false, HelpText = "Set title of the toast notification")]
-        public string Prompt { get; set; }
 
-        [Option('m', "message", Required = true, HelpText = "Set message of the toast notification")]
-        public string Message { get; set; }
+    public enum MessageType {
+        Info,
+        Warning,
+        Error,
+        Success
+    }
 
-        [Option('t', "type", Required = false, HelpText = "Set icon of the toast notification")]
-        public string Type { get; set; }
-
-        [Option('e', "expiration", Required = false, HelpText = "Number of seconds before the OS mark this notification as expired. (Default: 86400 seconds ; 1 day")]
+    public class ProgramArguments {
+        public string Title { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public MessageType Type { get; set; }
         public double Expiration { get; set; }
-
-        [Option('d', "duration", Required = false, HelpText = "Make the toast appears longer")]
         public bool Duration { get; set; }
-
-        [Option('s', "Sticky", Required = false, HelpText = "Make the toast appears longer")]
         public bool Sticky { get; set; }
+    }
+
+    // Classe pour configurer les arguments
+    public class CommandLineConfig {
+        public Option<string> TitleOption { get; }
+        public Option<string> MessageOption { get; }
+        public Option<MessageType> TypeOption { get; }
+        public Option<double> ExpirationOption { get; }
+        public Option<bool> DurationOption { get; }
+        public Option<bool> StickyOption { get; }
+
+        public CommandLineConfig() {
+            TitleOption = new("-p", "--title") {
+                Description = "Set title of the toast notification",
+                Required = false,
+                DefaultValueFactory = parseResult => ""
+            };
+
+            MessageOption = new("-m", "--message") {
+                Description = "Set message of the toast notification",
+                Required = true
+            };
+
+            TypeOption = new("-t", "--type") {
+                Description = "Set icon of the toast notification",
+                Required = false,
+                DefaultValueFactory = parseResult => MessageType.Info
+            };
+
+            ExpirationOption = new("-e", "--expiration") {
+                Description = "Number of seconds before the OS mark this notification as expired. (Default: 86400 seconds ; 1 day)",
+                Required = false,
+                DefaultValueFactory = parseResult => 86400
+            };
+
+            DurationOption = new("-d", "--duration") {
+                Description = "Make the toast appears longer",
+                Required = false,
+                DefaultValueFactory = parseResult => false
+            };
+
+            StickyOption = new("-s", "--sticky") {
+                Description = "Make the toast appears longer",
+                Required = false,
+                DefaultValueFactory = parseResult => false
+            };
+        }
+
+        public RootCommand CreateRootCommand() {
+            var rootCommand = new RootCommand("NotifMe") {
+                TitleOption,
+                MessageOption,
+                TypeOption,
+                ExpirationOption,
+                DurationOption,
+                StickyOption
+            };
+
+            return rootCommand;
+        }
     }
 }
