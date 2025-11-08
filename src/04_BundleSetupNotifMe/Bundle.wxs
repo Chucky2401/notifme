@@ -1,0 +1,62 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
+	 xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+	<Bundle Id="NotifMe.bundle"
+			Name="NotifMe"
+			Manufacturer="BlackWizard"
+			Version="1.0.0"
+			UpgradeCode="{C8A33148-6286-44CB-8E15-E1763809544D}"
+			Compressed="true"
+			IconSourceFile="..\01_NotifMe\img\app.ico"
+			DisableModify="yes">
+		
+		<BootstrapperApplication>
+			<bal:WixStandardBootstrapperApplication LogoSideFile="..\01_NotifMe\img\app.ico"
+													LogoFile="..\01_NotifMe\img\app.ico"
+													LicenseUrl="https://sterimed.fr/fr/politique-de-confidentialite"
+													SuppressOptionsUI="yes"
+													Theme="hyperlinkLicense" />
+		</BootstrapperApplication>
+
+		<util:RegistrySearch Id="RegistrySearchNet8Runtime"
+			Root="HKLM"
+            Key="SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.NETCore.App"
+            Variable="Version"
+			Value="8.0.6"
+            Result="exists" />
+
+		<util:RegistrySearch Id="RegistrySearchDesktop8App"
+			Root="HKLM"
+            Key="SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.WindowsDesktop.App"
+            Variable="Version"
+			Value="8.0.6"
+            Result="exists" />
+
+		<Chain>
+			<!-- TODO: Define the list of chained packages. -->
+			<!-- <MsiPackage SourceFile="path\to\your.msi" /> -->
+			<!-- .NET 8 Runtime -->
+			<ExePackage Id="DotNetRuntime"
+						SourceFile="runtimes\dotnet-runtime-8.0.6-win-x64.exe"
+						InstallArguments="/install /quiet /norestart"
+						Compressed="yes"
+						Vital="yes"
+						DetectCondition="RegistrySearchNet8Runtime"
+						Permanent="yes" />
+
+			<!-- .NET 8 Desktop Runtime -->
+			<ExePackage Id="DotNetDesktopRuntime"
+						SourceFile="runtimes\windowsdesktop-runtime-8.0.6-win-x64.exe"
+						InstallArguments="/install /quiet /norestart"
+						Compressed="yes"
+						Vital="yes"
+						DetectCondition="RegistrySearchDesktop8App"
+						Permanent="yes" />
+
+			<!-- MSI principal -->
+			<MsiPackage Id="NotifMeMsi"
+						SourceFile="..\03_SetupNotifMe\bin\x64\Release\en-US\setup.msi"
+						Compressed="yes" />
+		</Chain>
+
+	</Bundle>
+</Wix>
