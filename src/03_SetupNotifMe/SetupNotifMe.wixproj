@@ -1,0 +1,7 @@
+﻿<Project Sdk="WixToolset.Sdk/6.0.2">
+  <ItemGroup>
+    <ProjectReference Include="..\01_NotifMe\NotifMe.csproj" />
+    <ProjectReference Include="..\02_NtfyService\NtfyService.csproj" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.2" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,44 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+    <Package Id="NotifMe.setup"
+		Name="NotifMe"
+		Manufacturer="BlackWizard"
+		Version="1.0.0"
+		UpgradeCode="{D1513F09-0B0B-4EF4-9CED-A216C51590AE}"
+		Compressed="yes"
+		Scope="perMachine">
+	    <MediaTemplate EmbedCab="yes" />
+        <MajorUpgrade DowngradeErrorMessage="Newer version already installed" />
+
+		<Feature Id="Main" Title="NotifMe" Level="1">
+			<ComponentGroupRef Id="NotifMeFiles" />
+		</Feature>
+
+		<StandardDirectory Id="ProgramFiles64Folder">
+			<Directory Id="INSTALLFOLDER" Name="NotifMe" />
+		</StandardDirectory>
+	</Package>
+
+	<Fragment>
+		<ComponentGroup Id="NotifMeFiles">
+			<Files Directory="INSTALLFOLDER" Include="$(var.NotifMe.TargetDir)**">
+				<!-- Excluded because we need to explicitly target it in the component below. -->
+				<Exclude Files="$(var.NotifMe.TargetPath)" />
+			</Files>
+
+			<Component Directory="INSTALLFOLDER" Id="MainFiles" Guid="{A1B2C3D4-5678-9ABC-DEF0-1234567890AB}">
+				<File Id="MainExe" Source="$(var.NotifMe.TargetPath)" KeyPath="yes" />
+			</Component>
+
+			<Component Directory="INSTALLFOLDER" Id="ServiceFiles" Guid="{A5E9E79B-4E79-41DA-85A2-E649C4CA387F}">
+				<File Id="ServiceExe" Source="$(var.NtfyService.TargetDir)NtfyService.exe" KeyPath="yes" />
+				<ServiceInstall Id="ServiceInstaller" Type="ownProcess" Name="NtfyNotifMe" DisplayName="Ntfy Notifme Service"
+								Description="Ntfy service with NotifMe to show alert on user screen" Start="auto" ErrorControl="normal"
+								Account="LocalSystem">
+					<util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="restart"
+										RestartServiceDelayInSeconds="60" ResetPeriodInDays="1" ServiceName="NtfyNotifMe" />
+				</ServiceInstall>
+				<ServiceControl Id="StartService" Start="install" Stop="both" Remove="uninstall" Name="NtfyNotifMe" Wait="yes" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
