@@ -30,7 +30,7 @@
     </Content>
     <Content Include="img\app.ico" />
     <Content Include="img\question.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="img\success.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
