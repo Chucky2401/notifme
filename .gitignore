@@ -7,14 +7,16 @@ tmp/
 .vs
 src/.vs
 *.pext
+*.htm
+*.log
 
 # Personal working files/folders
 scripts/
 notes/
 
 # NotifMe
-src/01_NotifMe/assets/client.yml
-src/01_NotifMe/ext/ntfy.exe
+src/01_NotifMe/client.yml
+src/01_NotifMe/ntfy.exe
 
 # Setup
 # N/A
