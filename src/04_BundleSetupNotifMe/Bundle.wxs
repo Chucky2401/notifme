@@ -54,7 +54,7 @@
 
 			<!-- MSI principal -->
 			<MsiPackage Id="NotifMeMsi"
-						SourceFile="..\03_SetupNotifMe\bin\x64\Release\en-US\setup.msi"
+						SourceFile="..\03_SetupNotifMe\bin\x64\Release\SetupNotifMe.msi"
 						Compressed="yes" />
 		</Chain>
 
