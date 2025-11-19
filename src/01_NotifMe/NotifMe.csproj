@@ -61,10 +61,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="assets\client.yml">
+    <None Update="client.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ext\ntfy.exe">
+    <None Update="ntfy.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="img\app.png">
