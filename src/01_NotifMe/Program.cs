@@ -98,5 +98,9 @@ internal class Program {
                 t.ExpirationTime = DateTime.Now.AddSeconds(opts.Expiration);
             }
         });
+
+        // Sometimes, if we do not wait a little
+        // The notification is killed before showing
+        Thread.Sleep(2000);
     }
 }
